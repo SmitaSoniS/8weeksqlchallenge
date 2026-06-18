@@ -1,4 +1,3 @@
-# 8weeksqlchallenge
 # 8 Week SQL Challenge
 
 Solutions for the 8 Week SQL Challenge covering real world business case studies focused on SQL problem solving and analytical querying.
