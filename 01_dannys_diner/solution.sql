@@ -103,9 +103,34 @@ WHERE rn=1;
 PROBLEM 8:What is the total items and amount spent for each member before they became a member?
 SOLUTION 8:
 
+SELECT s.customer_id AS CustomerID, count(m.product_name) AS Product_Count, SUM(m.price) AS Price
+FROM members mem JOIN sales s ON (mem.customer_id=s.customer_id) JOIN menu m ON (m.product_id=s.product_id)
+WHERE mem.join_date>s.order_date
+GROUP BY CustomerID;
+
+╭────────────┬───────────────┬───────╮
+│ CustomerID │ Product_Count │ Price │
+╞════════════╪═══════════════╪═══════╡
+│ A          │             2 │    25 │
+│ B          │             4 │    52 │
+╰────────────┴───────────────┴───────╯
 
 PROBLEM 9: If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?
 SOLUTION 9:
+
+WITH Summary AS (SELECT mem.customer_id as CustomerID, m.product_name AS Product, CASE WHEN m.product_name='sushi' THEN SUM(m.price)*20 ELSE SUM(m.price)*10 END AS Points
+FROM members mem JOIN sales s ON (mem.customer_id=s.customer_id) JOIN menu m ON (m.product_id=s.product_id)
+GROUP BY CustomerID, Product)
+SELECT CustomerID, SUM(Points) AS Points
+FROM Summary
+GROUP BY CustomerID;
+
+╭────────────┬────────╮
+│ CustomerID │ Points │
+╞════════════╪════════╡
+│ A          │    860 │
+│ B          │    940 │
+╰────────────┴────────╯
 
 PROBLEM 10: In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?
 SOLUTION 10:
