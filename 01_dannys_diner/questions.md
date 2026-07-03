@@ -1,4 +1,4 @@
-# Danny's Diner Questions
+# 8 Week SQL Challenge — Week 1: Danny's Diner
 
 ## Question 1
 
