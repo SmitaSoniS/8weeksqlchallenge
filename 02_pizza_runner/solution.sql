@@ -1,10 +1,48 @@
 PROBLEM 1: How many pizzas were ordered?
+SOLUTION 1
+SELECT COUNT(pizza_id) AS PizzaCount
+FROM customer_orders;
+╭────────────╮
+│ PizzaCount │
+╞════════════╡
+│         14 │
+╰────────────╯
 
 PROBLEM 2: How many unique customer orders were made?
+SOLUTION 2
+SELECT COUNT(DISTINCT order_id) AS Unique_Order_Count
+FROM customer_orders;
+╭────────────────────╮
+│ Unique_Order_Count │
+╞════════════════════╡
+│                 10 │
+╰────────────────────╯
 
 PROBLEM 3: How many successful orders were delivered by each runner?
+SOLUTION 3
+SELECT runner_id as RunnerID, COUNT(*) AS Order_Completed
+FROM runner_orders
+WHERE (cancellation IS NULL) OR (cancellation ='')
+GROUP BY runner_id;
+╭──────────┬─────────────────╮
+│ RunnerID │ Order_Completed │
+╞══════════╪═════════════════╡
+│        1 │               4 │
+│        2 │               3 │
+│        3 │               1 │
+╰──────────┴─────────────────╯
 
 PROBLEM 4: How many of each type of pizza was delivered?
+SELECT pn.pizza_name as PizzaName, count(co.order_id) AS Delivered_Count
+FROM runner_orders ro JOIN customer_orders co ON (ro.order_id = co.order_id) JOIN pizza_names pn ON (co.pizza_id=pn.pizza_id)
+WHERE (ro.cancellation IS NULL) OR (ro.cancellation ='')
+GROUP BY pn.pizza_name;
+╭────────────┬─────────────────╮
+│ PizzaName  │ Delivered_Count │
+╞════════════╪═════════════════╡
+│ Meatlovers │               9 │
+│ Vegetarian │               3 │
+╰────────────┴─────────────────╯
 
 PROBLEM 5: How many Vegetarian and Meatlovers pizzas were ordered by each customer?
 
