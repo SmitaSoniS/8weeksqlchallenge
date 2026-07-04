@@ -45,6 +45,21 @@ GROUP BY pn.pizza_name;
 ╰────────────┴─────────────────╯
 
 PROBLEM 5: How many Vegetarian and Meatlovers pizzas were ordered by each customer?
+SELECT co.customer_id as CustomerID, pn.pizza_name AS PizzaName, count(*) AS PizzaCount
+FROM customer_orders co JOIN pizza_names pn ON (co.pizza_id =pn.pizza_id)
+GROUP BY co.customer_id, pn.pizza_name;
+╭────────────┬────────────┬────────────╮
+│ CustomerID │ PizzaName  │ PizzaCount │
+╞════════════╪════════════╪════════════╡
+│        101 │ Meatlovers │          2 │
+│        101 │ Vegetarian │          1 │
+│        102 │ Meatlovers │          2 │
+│        102 │ Vegetarian │          1 │
+│        103 │ Meatlovers │          3 │
+│        103 │ Vegetarian │          1 │
+│        104 │ Meatlovers │          3 │
+│        105 │ Vegetarian │          1 │
+╰────────────┴────────────┴────────────╯
 
 PROBLEM 6: What was the maximum number of pizzas delivered in a single order?
 
