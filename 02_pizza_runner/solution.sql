@@ -33,6 +33,7 @@ GROUP BY runner_id;
 ╰──────────┴─────────────────╯
 
 PROBLEM 4: How many of each type of pizza was delivered?
+SOLUTION 4
 SELECT pn.pizza_name as PizzaName, count(co.order_id) AS Delivered_Count
 FROM runner_orders ro JOIN customer_orders co ON (ro.order_id = co.order_id) JOIN pizza_names pn ON (co.pizza_id=pn.pizza_id)
 WHERE (ro.cancellation IS NULL) OR (ro.cancellation ='')
@@ -45,6 +46,7 @@ GROUP BY pn.pizza_name;
 ╰────────────┴─────────────────╯
 
 PROBLEM 5: How many Vegetarian and Meatlovers pizzas were ordered by each customer?
+SOLUTION 5
 SELECT co.customer_id as CustomerID, pn.pizza_name AS PizzaName, count(*) AS PizzaCount
 FROM customer_orders co JOIN pizza_names pn ON (co.pizza_id =pn.pizza_id)
 GROUP BY co.customer_id, pn.pizza_name;
@@ -62,6 +64,30 @@ GROUP BY co.customer_id, pn.pizza_name;
 ╰────────────┴────────────┴────────────╯
 
 PROBLEM 6: What was the maximum number of pizzas delivered in a single order?
+SOLUTION 6
+SELECT count(*) AS PizzaCount
+FROM customer_orders
+GROUP BY order_id
+ORDER BY count(*) DESC
+LIMIT 1;
+
+SELECT max(Pizzas) AS PizzaCount
+FROM (SELECT count(*) AS Pizzas
+      FROM customer_orders
+      GROUP BY order_id);
+
+WITH Summary AS (SELECT order_id AS OrderID, count(*) as PizzaCount, RANK() OVER(ORDER BY count(*) DESC) AS rn
+FROM customer_orders
+GROUP BY order_id
+)
+SELECT PizzaCount
+FROM Summary
+WHERE rn=1;
+╭────────────╮
+│ PizzaCount │
+╞════════════╡
+│          3 │
+╰────────────╯
 
 PROBLEM 7: For each customer, how many delivered pizzas had at least 1 change and how many had no changes?
 
