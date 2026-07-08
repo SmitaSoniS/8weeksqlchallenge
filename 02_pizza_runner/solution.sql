@@ -91,31 +91,12 @@ WHERE rn=1;
 
 PROBLEM 7: For each customer, how many delivered pizzas had at least 1 change and how many had no changes?
 SOLUTION 7:
-SELECT
-    co.customer_id AS CustomerID,
-    SUM(
-        CASE
-            WHEN (co.exclusions IS NULL OR co.exclusions = '')
-             AND (co.extras IS NULL OR co.extras = '')
-            THEN 0
-            ELSE 1
-        END
-    ) AS AtLeast1Change,
-    SUM(
-        CASE
-            WHEN (co.exclusions IS NULL OR co.exclusions = '')
-             AND (co.extras IS NULL OR co.extras = '')
-            THEN 1
-            ELSE 0
-        END
-    ) AS NoChange
-FROM customer_orders co
-JOIN runner_orders ro
-    ON co.order_id = ro.order_id
-WHERE ro.cancellation IS NULL
-   OR ro.cancellation = ''
-GROUP BY co.customer_id
-ORDER BY co.customer_id;
+SELECT co.customer_id AS CustomerID,
+       SUM(CASE WHEN (co.exclusions IS NOT NULL AND co.exclusions != '') OR (co.extras IS NOT NULL AND co.extras != '') THEN 1 ELSE 0 END) AS AtleastOneChange,
+       SUM(CASE WHEN (co.exclusions IS NULL OR co.exclusions = '') AND (co.extras IS NULL OR co.extras = '') THEN 1 ELSE 0 END) AS NoChange
+FROM customer_orders co JOIN runner_orders ro ON co.order_id=ro.order_id
+WHERE ro.cancellation IS NULL OR ro.cancellation=''
+GROUP BY co.customer_id;
 ╭────────────┬────────────────┬──────────╮
 │ CustomerID │ AtLeast1Change │ NoChange │
 ╞════════════╪════════════════╪══════════╡
