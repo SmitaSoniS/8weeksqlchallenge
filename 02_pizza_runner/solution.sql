@@ -107,7 +107,8 @@ GROUP BY co.customer_id;
 │        105 │              1 │        0 │
 ╰────────────┴────────────────┴──────────╯
 
-PROBLEM 8: How many pizzas were delivered that had both exclusions and extras? (Solve Above SAgain)
+PROBLEM 8: How many pizzas were delivered that had both exclusions and extras?
+
 
 PROBLEM 9: What was the total volume of pizzas ordered for each hour of the day?
 
