@@ -108,7 +108,18 @@ GROUP BY co.customer_id;
 ╰────────────┴────────────────┴──────────╯
 
 PROBLEM 8: How many pizzas were delivered that had both exclusions and extras?
-
+SELECT count(*) AS Pizza_Count
+FROM customer_orders co
+  JOIN runner_orders ro
+  ON (co.order_id=ro.order_id)
+WHERE (co.exclusions IS NOT NULL AND co.exclusions != '')
+  AND (co.extras IS NOT NULL AND co.extras != '')
+  AND (ro.cancellation IS NULL OR ro.cancellation = '');
+╭─────────────╮
+│ Pizza_Count │
+╞═════════════╡
+│           1 │
+╰─────────────╯
 
 PROBLEM 9: What was the total volume of pizzas ordered for each hour of the day?
 
