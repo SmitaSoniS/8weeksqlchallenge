@@ -122,6 +122,21 @@ WHERE (co.exclusions IS NOT NULL AND co.exclusions != '')
 ╰─────────────╯
 
 PROBLEM 9: What was the total volume of pizzas ordered for each hour of the day?
+SELECT CAST(strftime('%H', order_time) AS Integer) AS Hour,
+                                   count(order_id) AS PizzaCount
+FROM customer_orders
+GROUP BY strftime('%H', order_time)
+ORDER BY Hour;
+╭──────┬────────────╮
+│ Hour │ PizzaCount │
+╞══════╪════════════╡
+│   11 │          1 │
+│   13 │          3 │
+│   18 │          3 │
+│   19 │          1 │
+│   21 │          3 │
+│   23 │          3 │
+╰──────┴────────────╯
 
 PROBLEM 10: What was the volume of orders for each day of the week?
 
