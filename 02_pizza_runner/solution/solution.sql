@@ -139,6 +139,18 @@ ORDER BY Hour;
 ╰──────┴────────────╯
 
 PROBLEM 10: What was the volume of orders for each day of the week?
+SELECT CAST(strftime('%w',order_time) AS Integer) AS Day, count(order_id) AS Order_Count
+FROM customer_orders
+GROUP BY strftime('%w',order_time)
+ORDER BY Day;
+╭─────┬─────────────╮
+│ Day │ Order_Count │
+╞═════╪═════════════╡
+│   0 │           1 │
+│   1 │           5 │
+│   5 │           5 │
+│   6 │           3 │
+╰─────┴─────────────╯
 
 PROBLEM 11: How many runners signed up for each 1 week period?
 
