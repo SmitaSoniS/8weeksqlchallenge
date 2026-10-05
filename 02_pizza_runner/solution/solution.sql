@@ -153,14 +153,51 @@ ORDER BY Day;
 ╰─────┴─────────────╯
 
 PROBLEM 11: How many runners signed up for each 1 week period?
+SELECT count(runner_id), ((min(registration_date))+6)%7 AS Week
+FROM runners
+GROUP BY runner_id;
+╭──────┬──────────────╮
+│ Week │ runner_count │
+╞══════╪══════════════╡
+│    0 │            2 │
+│    1 │            1 │
+│    2 │            1 │
+╰──────┴──────────────╯
 
 PROBLEM 12: What was the average time in minutes it took for each runner to arrive at the Pizza Runner HQ to pick up the order?
 
 PROBLEM 13: Is there any relationship between the number of pizzas and how long the order takes to prepare?
 
 PROBLEM 14: What was the average distance travelled for each customer?
+SELECT 
+    co.customer_id,
+    ROUND(AVG(CAST(SUBSTR(ro.distance, 1, 2) AS INT)), 2)
+        AS Average_Distance_Travelled
+FROM customer_orders co
+JOIN runner_orders ro 
+    ON co.order_id = ro.order_id
+WHERE ro.distance IS NOT NULL
+GROUP BY co.customer_id
+ORDER BY co.customer_id;
+╭─────────────┬──────────────────────╮
+│ customer_id │ Average_Distance_... │
+╞═════════════╪══════════════════════╡
+│         101 │                 20.0 │
+│         102 │                16.33 │
+│         103 │                 23.0 │
+│         104 │                 10.0 │
+│         105 │                 25.0 │
+╰─────────────┴──────────────────────╯
 
 PROBLEM 15: What was the difference between the longest and shortest delivery times for all orders?
+SELECT (MAX(substr(duration,1,2)) - MIN(substr(duration,1,2))) AS Diff
+FROM runner_orders
+WHERE duration IS NOT NULL;
+╭──────╮
+│ Diff │
+╞══════╡
+│   30 │
+╰──────╯
 
 PROBLEM 16: What was the average speed for each runner for each delivery?
 
