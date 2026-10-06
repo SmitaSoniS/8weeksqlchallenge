@@ -200,5 +200,30 @@ WHERE duration IS NOT NULL;
 ╰──────╯
 
 PROBLEM 16: What was the average speed for each runner for each delivery?
+SELECT 
+    runner_id,
+    order_id,
+    ROUND(
+        SUM(CAST(SUBSTR(distance, 1, 2) AS FLOAT)) /
+        SUM(CAST(SUBSTR(duration, 1, 2) AS FLOAT)),
+        2
+    ) AS speed
+FROM runner_orders
+WHERE distance IS NOT NULL
+  AND duration IS NOT NULL
+GROUP BY runner_id, order_id
+ORDER BY runner_id, order_id;
+╭───────────┬──────────┬───────╮
+│ runner_id │ order_id │ speed │
+╞═══════════╪══════════╪═══════╡
+│         1 │        1 │  0.63 │
+│         1 │        2 │  0.74 │
+│         1 │        3 │  0.65 │
+│         1 │       10 │   1.0 │
+│         2 │        4 │  0.57 │
+│         2 │        7 │   1.0 │
+│         2 │        8 │  1.53 │
+│         3 │        5 │  0.67 │
+╰───────────┴──────────┴───────╯
 
 PROBLEM 17: What is the successful delivery percentage for each runner?
