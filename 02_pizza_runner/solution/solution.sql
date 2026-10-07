@@ -165,6 +165,18 @@ GROUP BY runner_id;
 ╰──────┴──────────────╯
 
 PROBLEM 12: What was the average time in minutes it took for each runner to arrive at the Pizza Runner HQ to pick up the order?
+SELECT runner_id,
+       ROUND(AVG((strftime('%s', ro.pickup_time) - strftime('%s', co.order_time)) / 60.0),2) AS avg_time_min
+FROM runner_orders ro JOIN customer_orders co ON (ro.order_id=co.order_id)
+WHERE (ro.pickup_time IS NOT NULL) AND (co.order_time IS NOT NULL)
+GROUP BY runner_id;
+╭───────────┬──────────────╮
+│ runner_id │ avg_time_min │
+╞═══════════╪══════════════╡
+│         1 │        15.68 │
+│         2 │        23.72 │
+│         3 │        10.47 │
+╰───────────┴──────────────╯
 
 PROBLEM 13: Is there any relationship between the number of pizzas and how long the order takes to prepare?
 
