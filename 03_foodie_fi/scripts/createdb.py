@@ -1,16 +1,18 @@
 import sqlite3
-import pandas as pd
+from pathlib import Path
 
-sales = pd.read_csv("sales.csv")
-menu = pd.read_csv("menu.csv")
-members = pd.read_csv("members.csv")
+DB_PATH = Path(__file__).parent / "foodie_fi.db"
+SCHEMA_PATH = Path(__file__).parent / "schema.sql"
 
-conn = sqlite3.connect("casestudy1.db")
+conn = sqlite3.connect(DB_PATH)
 
-sales.to_sql("sales", conn, if_exists="replace", index=False)
-menu.to_sql("menu", conn, if_exists="replace", index=False)
-members.to_sql("members", conn, if_exists="replace", index=False)
+try:
+    conn.execute("PRAGMA foreign_keys = ON")
 
-conn.close()
+    schema = SCHEMA_PATH.read_text(encoding="utf-8")
+    conn.executescript(schema)
 
-print("Database created")
+    print(f"Database created at: {DB_PATH}")
+
+finally:
+    conn.close()

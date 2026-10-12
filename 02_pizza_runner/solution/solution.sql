@@ -179,6 +179,21 @@ GROUP BY runner_id;
 ╰───────────┴──────────────╯
 
 PROBLEM 13: Is there any relationship between the number of pizzas and how long the order takes to prepare?
+SELECT Pizza_Count, ROUND(AVG(prep_time),2) AS avg_prep_time
+FROM (SELECT count(co.order_id) AS Pizza_Count, ROUND((strftime('%s', ro.pickup_time) - strftime('%s', co.order_time))/60.0,2) AS prep_time
+FROM customer_orders co JOIN runner_orders ro ON (co.order_id=ro.order_id)
+WHERE (ro.pickup_time IS NOT NULL) AND (co.order_time IS NOT NULL)
+GROUP BY prep_time
+ORDER BY Pizza_Count)
+GROUP BY Pizza_Count
+ORDER BY Pizza_Count;
+╭─────────────┬───────────────╮
+│ Pizza_Count │ avg_prep_time │
+╞═════════════╪═══════════════╡
+│           1 │         12.36 │
+│           2 │         18.38 │
+│           3 │         29.28 │
+╰─────────────┴───────────────╯
 
 PROBLEM 14: What was the average distance travelled for each customer?
 SELECT 
@@ -239,3 +254,19 @@ ORDER BY runner_id, order_id;
 ╰───────────┴──────────┴───────╯
 
 PROBLEM 17: What is the successful delivery percentage for each runner?
+SELECT runner_id,
+    ROUND(100.0*SUM(CASE
+        WHEN cancellation IS NULL OR cancellation = ''
+        THEN 1
+        ELSE 0
+    END)/count(order_id),2) AS successful_del
+FROM runner_orders
+GROUP BY runner_id
+ORDER BY runner_id;
+╭───────────┬────────────────╮
+│ runner_id │ successful_del │
+╞═══════════╪════════════════╡
+│         1 │          100.0 │
+│         2 │           75.0 │
+│         3 │           50.0 │
+╰───────────┴────────────────╯
